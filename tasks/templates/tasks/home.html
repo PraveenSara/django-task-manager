@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Task Manager</title>
+  <style>
+    body {font-family: Arial; background:#f6f8fa; margin:0; padding:0;}
+    .container {width: 500px; margin: 50px auto; background:white; padding:20px; border-radius:10px;}
+    h1 {text-align:center;}
+    form {display:flex; margin-bottom:20px;}
+    input[type="text"] {flex:1; padding:10px;}
+    button {padding:10px; margin-left:5px;}
+    ul {list-style:none; padding:0;}
+    li {display:flex; justify-content:space-between; margin-bottom:10px;}
+    .completed {text-decoration:line-through; color:gray;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task Manager</h1>
+    <form method="POST" action="{% url 'add_task' %}">
+      {% csrf_token %}
+      <input type="text" name="title" placeholder="New task..." required>
+      <button type="submit">Add</button>
+    </form>
+
+    <ul>
+      {% for task in tasks %}
+      <li>
+        <span class="{% if task.completed %}completed{% endif %}">{{ task.title }}</span>
+        <div>
+          <a href="{% url 'toggle_task' task.id %}">
+            {% if task.completed %}
+                Undo
+            {% else %}
+                Complete
+            {% endif %}
+          </a>
+          <a href="{% url 'delete_task' task.id %}">Delete</a>
+        </div>
+      </li>
+      {% empty %}
+      <p>No tasks yet!</p>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>
